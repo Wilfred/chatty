@@ -2,7 +2,7 @@ Name:                chatty
 Version:             0.1
 Synopsis:            HTTP IRC bridge
 Description:         HTTP endpoint for sending IRC messages
-License:             GPLv2
+License:             GPL-2
 Author:              Wilfred Hughes
 Maintainer:          me@wilfred.me.uk
 Stability:           Experimental
