@@ -1,10 +1,10 @@
 Name:                chatty
 Version:             0.1
-Synopsis:            Project Synopsis Here
-Description:         Project Description Here
-License:             AllRightsReserved
-Author:              Author
-Maintainer:          maintainer@example.com
+Synopsis:            HTTP IRC bridge
+Description:         HTTP endpoint for sending IRC messages
+License:             GPLv2
+Author:              Wilfred Hughes
+Maintainer:          me@wilfred.me.uk
 Stability:           Experimental
 Category:            Web
 Build-type:          Simple
