@@ -6,9 +6,11 @@ data IrcServer = IrcServer {
   port :: PortID
   }
 
+newtype IrcChannel = IrcChannel String
+
 data IrcMessage = IrcMessage {
   server :: IrcServer,
-  channel :: String,
+  channel :: IrcChannel,
   content :: String
   }
 
