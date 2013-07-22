@@ -1,5 +1,5 @@
 import Network(connectTo, PortNumber, PortID)
-import System.IO(hSetBuffering, BufferMode(NoBuffering), hPutStr)
+import System.IO(hSetBuffering, BufferMode(NoBuffering), Handle, hPutStr)
 
 data IrcServer = IrcServer {
   address :: String,
@@ -14,15 +14,17 @@ data IrcMessage = IrcMessage {
   content :: String
   }
 
+ircConnect :: IrcServer -> IO Handle
+ircConnect server = do
+  handle <- connectTo (address server) (port server)
+  hSetBuffering handle NoBuffering
+  return handle
+
 sayMessage :: IrcMessage -> IO ()
 sayMessage message = do
-  let server' = (server message)
-      address' = (address server')
-      port' = (port server')
-  socket <- connectTo address' port'
-  hSetBuffering socket NoBuffering
+  handle <- ircConnect $ server message
   -- TODO: send the necessary hello first
   -- TODO: factor out a function that writes valid IRC message syntax
-  hPutStr socket "todo"
+  hPutStr handle "todo"
   return ()
   
