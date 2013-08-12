@@ -31,6 +31,10 @@ userMessage c =
 joinMessage :: IrcChannel -> String
 joinMessage (IrcChannel chan) = "JOIN " ++ chan ++ "\r\n"
 
+privMessage :: IrcMessage -> String
+privMessage m =
+  "PRIVMSG " ++ (channel m) ++ " :" ++ (content m)
+
 ircConnect :: IrcConfig -> IrcServer -> IO Handle
 ircConnect config server = do
   -- open a connection
