@@ -14,17 +14,39 @@ data IrcMessage = IrcMessage {
   content :: String
   }
 
-ircConnect :: IrcServer -> IO Handle
-ircConnect server = do
+data IrcConfig = IrcConfig {
+  nick :: String,
+  userName :: String,
+  hostName :: String,
+  serverName :: String,
+  realName :: String
+  }
+
+nickMessage :: IrcConfig -> String
+nickMessage config = "NICK " ++ (nick config) ++ "\r\n"
+
+userMessage :: IrcConfig -> String
+userMessage c =
+  "USER " ++ (userName c) ++ " " ++ (hostName c) ++ " " ++ (serverName c) ++ " :" ++ (realName c) ++ "\r\n"
+
+joinMessage :: IrcChannel -> String
+joinMessage (IrcChannel chan) = "JOIN " ++ chan ++ "\r\n"
+
+ircConnect :: IrcConfig -> IrcServer -> IO Handle
+ircConnect config server = do
+  -- open a connection
   handle <- connectTo (address server) (port server)
   hSetBuffering handle NoBuffering
+
+  -- send the necessary HELLO
+  -- TODO
+  
   return handle
 
-sayMessage :: IrcMessage -> IO ()
-sayMessage message = do
-  handle <- ircConnect $ server message
-  -- TODO: send the necessary hello first
-  -- TODO: factor out a function that writes valid IRC message syntax
+
+
+sayMessage :: Handle -> IrcMessage -> IO ()
+sayMessage handle message = do
   hPutStr handle "todo"
   return ()
   
