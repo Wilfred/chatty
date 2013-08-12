@@ -44,7 +44,13 @@ ircConnect config server = do
   hSetBuffering handle NoBuffering
 
   -- send the necessary HELLO
-  -- TODO
+  hPutStr handle $ nickMessage config
+  putStrLn $ nickMessage config
+  hPutStr handle $ userMessage config
+  putStrLn $ userMessage config
+
+  -- We assume we will have sent the message and disconnected before
+  -- the server send a PING.
   
   return handle
 
