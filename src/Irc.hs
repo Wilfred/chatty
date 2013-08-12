@@ -54,10 +54,6 @@ ircConnect config server = do
   
   return handle
 
-
-
 sayMessage :: Handle -> IrcMessage -> IO ()
-sayMessage handle message = do
-  hPutStr handle "todo"
-  return ()
+sayMessage handle message = hPutStr handle $ privMessage message
   
