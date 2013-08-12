@@ -9,7 +9,6 @@ data IrcServer = IrcServer {
 newtype IrcChannel = IrcChannel String
 
 data IrcMessage = IrcMessage {
-  server :: IrcServer,
   channel :: IrcChannel,
   content :: String
   }
