@@ -33,7 +33,9 @@ joinMessage (IrcChannel chan) = "JOIN " ++ chan ++ "\r\n"
 
 privMessage :: IrcMessage -> String
 privMessage m =
-  "PRIVMSG " ++ (channel m) ++ " :" ++ (content m)
+  "PRIVMSG " ++ channelName ++ " :" ++ (content m)
+  where
+    IrcChannel channelName = channel m
 
 ircConnect :: IrcConfig -> IrcServer -> IO Handle
 ircConnect config server = do
