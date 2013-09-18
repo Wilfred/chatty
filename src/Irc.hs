@@ -19,6 +19,7 @@ data IrcConfig = IrcConfig {
   hostName :: String,
   serverName :: String,
   realName :: String
+  } deriving Show
   }
 
 nickMessage :: IrcConfig -> String
