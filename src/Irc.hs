@@ -6,12 +6,12 @@ data IrcServer = IrcServer {
   port :: PortID
   }
 
-newtype IrcChannel = IrcChannel String
+newtype IrcChannel = IrcChannel String deriving Show
 
 data IrcMessage = IrcMessage {
   channel :: IrcChannel,
   content :: String
-  }
+  } deriving Show
 
 data IrcConfig = IrcConfig {
   nick :: String,
