@@ -1,10 +1,10 @@
-import Network(connectTo, PortNumber, PortID)
-import System.IO(hSetBuffering, BufferMode(NoBuffering), Handle, hPutStr)
+import Network(connectTo, PortID(PortNumber))
+import System.IO(hSetBuffering, BufferMode(NoBuffering), Handle, hPutStr, hClose, hGetLine)
 
 data IrcServer = IrcServer {
   address :: String,
   port :: PortID
-  }
+  } deriving Show
 
 newtype IrcChannel = IrcChannel String deriving Show
 
@@ -20,9 +20,15 @@ data IrcConfig = IrcConfig {
   serverName :: String,
   realName :: String
   } deriving Show
+
+config = IrcConfig {
+  nick="chatty",
+  userName="chatty",
+  hostName="chatty",
+  serverName="chatty",
+  realName="Chatty IRC notifier"
   }
 
-nickMessage :: IrcConfig -> String
 nickMessage config = "NICK " ++ (nick config) ++ "\r\n"
 
 userMessage :: IrcConfig -> String
@@ -34,7 +40,7 @@ joinMessage (IrcChannel chan) = "JOIN " ++ chan ++ "\r\n"
 
 privMessage :: IrcMessage -> String
 privMessage m =
-  "PRIVMSG " ++ channelName ++ " :" ++ (content m)
+  "PRIVMSG " ++ channelName ++ " :" ++ (content m) ++ "\r\n"
   where
     IrcChannel channelName = channel m
 
@@ -45,16 +51,34 @@ ircConnect config server = do
   hSetBuffering handle NoBuffering
 
   -- send the necessary HELLO
-  hPutStr handle $ nickMessage config
-  putStrLn $ nickMessage config
-  hPutStr handle $ userMessage config
-  putStrLn $ userMessage config
+  writeToHandle handle $ nickMessage config
+  writeToHandle handle $ userMessage config
 
   -- We assume we will have sent the message and disconnected before
   -- the server send a PING.
   
   return handle
 
-sayMessage :: Handle -> IrcMessage -> IO ()
-sayMessage handle message = hPutStr handle $ privMessage message
-  
+writeToHandle :: Handle -> String -> IO ()
+writeToHandle h s = do
+  hPutStr h s
+  putStrLn $ "sent: " ++ s
+
+-- top level function
+sendToChannel :: IrcServer -> IrcMessage -> IO ()
+sendToChannel server message = do
+  -- open a connection to the server
+  h <- ircConnect config server
+
+  -- read some data to keep the server happy
+  hGetLine h
+
+  --join the channel
+  --TODO: this shouldn't be necessary
+  writeToHandle h $ joinMessage $ channel message
+
+  --send the message
+  writeToHandle h $ privMessage message
+
+  --disconnect
+  hClose h
