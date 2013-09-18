@@ -1,6 +1,9 @@
+module Irc where
+
 import Network(connectTo, PortID(PortNumber))
 import System.IO(hSetBuffering, BufferMode(NoBuffering), Handle, hPutStr, hClose, hGetLine)
 
+-- todo: rename to server
 data IrcServer = IrcServer {
   address :: String,
   port :: PortID
@@ -8,6 +11,7 @@ data IrcServer = IrcServer {
 
 newtype IrcChannel = IrcChannel String deriving Show
 
+-- todo: rename to message
 data IrcMessage = IrcMessage {
   channel :: IrcChannel,
   content :: String
