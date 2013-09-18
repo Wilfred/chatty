@@ -1,3 +1,9 @@
 This is Chatty, an HTTP service that send IRC messages.
 
 Source lives at https://github.com/Wilfred/chatty
+
+You can send an IRC message by visiting:
+
+/send?server=irc.freenode.org&channel=%23editd&message=helloworld
+
+(POST parameters work too)
