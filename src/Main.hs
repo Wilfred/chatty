@@ -1,16 +1,18 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import           Control.Applicative
-import           Snap.Core
-import           Snap.Util.FileServe
-import           Snap.Http.Server
+import Snap.Core(ifTop, Snap, route, getParam, writeBS)
+import Snap.Util.FileServe(serveFile)
+import Snap.Http.Server(quickHttpServe)
 
+import Control.Applicative((<|>))
 import Control.Monad.IO.Class (liftIO)
 
 import Data.Maybe(listToMaybe, fromMaybe)
 import Data.ByteString.Char8(unpack)
+
 import Network(PortID(PortNumber))
+
 import Irc
 
 main :: IO ()
