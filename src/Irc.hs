@@ -1,6 +1,6 @@
 module Irc where
 
-import Network(connectTo, PortID(PortNumber))
+import Network(connectTo, PortID())
 import System.IO(hSetBuffering, BufferMode(NoBuffering), Handle, hPutStr, hClose, hGetLine)
 
 -- todo: rename to server
@@ -11,6 +11,8 @@ data IrcServer = IrcServer {
 
 newtype IrcChannel = IrcChannel String deriving Show
 
+newtype IrcNick = IrcNick String deriving Show
+
 -- todo: rename to message
 data IrcMessage = IrcMessage {
   channel :: IrcChannel,
@@ -18,22 +20,22 @@ data IrcMessage = IrcMessage {
   } deriving Show
 
 data IrcConfig = IrcConfig {
-  nick :: String,
   userName :: String,
   hostName :: String,
   serverName :: String,
   realName :: String
   } deriving Show
 
-config = IrcConfig {
-  nick="chatty",
+defaultConfig :: IrcConfig
+defaultConfig = IrcConfig {
   userName="chatty",
   hostName="chatty",
   serverName="chatty",
-  realName="Chatty IRC notifier"
+  realName="Chatty IRC Bridge"
   }
 
-nickMessage config = "NICK " ++ (nick config) ++ "\r\n"
+nickMessage :: IrcNick -> String
+nickMessage (IrcNick nick) = "NICK " ++ nick ++ "\r\n"
 
 userMessage :: IrcConfig -> String
 userMessage c =
@@ -48,14 +50,14 @@ privMessage m =
   where
     IrcChannel channelName = channel m
 
-ircConnect :: IrcConfig -> IrcServer -> IO Handle
-ircConnect config server = do
+ircConnect :: IrcServer -> IrcConfig -> IrcNick -> IO Handle
+ircConnect server config nick = do
   -- open a connection
   handle <- connectTo (address server) (port server)
   hSetBuffering handle NoBuffering
 
   -- send the necessary HELLO
-  writeToHandle handle $ nickMessage config
+  writeToHandle handle $ nickMessage nick
   writeToHandle handle $ userMessage config
 
   -- We assume we will have sent the message and disconnected before
@@ -69,10 +71,10 @@ writeToHandle h s = do
   putStrLn $ "sent: " ++ s
 
 -- top level function
-sendToChannel :: IrcServer -> IrcMessage -> IO ()
-sendToChannel server message = do
+sendToChannel :: IrcServer -> IrcNick -> IrcMessage -> IO ()
+sendToChannel server nick message = do
   -- open a connection to the server
-  h <- ircConnect config server
+  h <- ircConnect server defaultConfig nick
 
   -- read some data to keep the server happy
   hGetLine h
