@@ -39,9 +39,3 @@ sendHandler = do
       liftIO $ sendToChannel ircServer ircNick ircMessage
       writeBS "ok"
     _ -> writeBS "Need a server, a port, a channel and a message."
-
-echoHandler :: Snap ()
-echoHandler = do
-    param <- getParam "echoparam"
-    maybe (writeBS "must specify echo/param in URL")
-          writeBS param
