@@ -30,7 +30,7 @@ sendHandler = do
   channel <- getParam "channel"
   message <- getParam "message"
 
-  -- allow the user to specify a port, but defualt to 6667 if not given or invalid number.
+  -- allow the user to specify a port, but default to 6667 if not given or invalid number.
   port <- getParam "port"
   let portNumber = case port of
         Just port' -> fromMaybe 6667 (maybeRead (unpack port') :: Maybe Integer)
@@ -43,7 +43,7 @@ sendHandler = do
   -- todo: allow port to be specified too
   case (server, channel, message) of
     (Just server', Just channel', Just message') -> do
-      let ircServer = IrcServer { address=(unpack server'), port=(PortNumber 6667) }
+      let ircServer = IrcServer { address=(unpack server'), port=(PortNumber (fromInteger portNumber)) }
       let ircMessage = IrcMessage { channel=(IrcChannel (unpack channel')), content=(unpack message') }
       liftIO $ sendToChannel ircServer ircNick ircMessage
       writeBS "ok"
