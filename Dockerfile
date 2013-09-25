@@ -5,8 +5,11 @@ MAINTAINER Wilfred Hughes me@wilfred.me.uk
 RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
 RUN apt-get update
 
-# Get our dependencies
+# Get our install dependencies
 RUN apt-get install -y ghc cabal-install
+
+# Get dependencies for keeping the process running
+RUN apt-get install -y supervisor
 
 # set up git
 RUN apt-get install -y git
@@ -21,10 +24,9 @@ RUN git clone https://github.com/Wilfred/chatty.git /opt/chatty
 RUN cabal update
 RUN apt-get install zlib1g-dev # required to build one our dependencies
 RUN cabal install /opt/chatty --user
-
-# Run the code automatically
-RUN apt-get install -y supervisor
+RUN mkdir /opt/chatty/log
 
 # Run the code!
+RUN cp /opt/chatty/chatty.conf /etc/supervisor/conf.d/
 ENTRYPOINT cd /opt/chatty && /.cabal/bin/chatty -p 80
 EXPOSE 80
