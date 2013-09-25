@@ -2,7 +2,7 @@
 
 An HTTP endpoint for sending messages to IRC channels.
 
-Haskell with Snapg, GPLv2 license.
+Haskell with Snap, GPLv2 license.
 
 ## Running
 
