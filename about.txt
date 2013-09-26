@@ -1,4 +1,4 @@
-This is Chatty, an HTTP service that send IRC messages.
+This is Chatty, an HTTP service that sends IRC messages.
 
 Source lives at https://github.com/Wilfred/chatty
 
