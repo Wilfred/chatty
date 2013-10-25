@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Snap.Core(ifTop, Snap, route, getParam, writeBS)
+import Snap.Core(ifTop, Snap, route, getParam, setResponseCode, modifyResponse, writeBS)
 import Snap.Util.FileServe(serveFile)
 import Snap.Http.Server(quickHttpServe)
 
@@ -46,7 +46,9 @@ sendHandler = do
       let ircMessage = IrcMessage { channel=IrcChannel (unpack channel'), content=unpack message' }
       liftIO $ sendToChannel ircServer ircNick ircMessage
       writeBS "ok"
-    _ -> writeBS "Need a server, a port, a channel and a message."
+    _ -> do
+      modifyResponse $ setResponseCode 400
+      writeBS "Need a server, a port, a channel and a message."
 
 
 maybeRead :: Read a => String -> Maybe a
