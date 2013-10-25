@@ -1,5 +1,5 @@
 Name:                chatty
-Version:             0.1
+Version:             0.2
 Synopsis:            HTTP IRC bridge
 Description:         HTTP endpoint for sending IRC messages
 License:             GPL-2
