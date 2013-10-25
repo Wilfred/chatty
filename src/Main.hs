@@ -48,7 +48,7 @@ sendHandler = do
       writeBS "ok"
     _ -> do
       modifyResponse $ setResponseCode 400
-      writeBS "Need a server, a port, a channel and a message."
+      writeBS "Need a server, a channel and a message."
 
 
 maybeRead :: Read a => String -> Maybe a
