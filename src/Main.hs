@@ -40,7 +40,6 @@ sendHandler = do
   nick <- getParam "nick"
   let ircNick = maybe (IrcNick "chatty") (\n -> (IrcNick (unpack n))) nick
 
-  -- todo: allow port to be specified too
   case (server, channel, message) of
     (Just server', Just channel', Just message') -> do
       let ircServer = IrcServer { address=(unpack server'), port=(PortNumber (fromInteger portNumber)) }
