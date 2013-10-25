@@ -38,12 +38,12 @@ sendHandler = do
 
   -- allow the user to specify a nick, but default to 'chatty'
   nick <- getParam "nick"
-  let ircNick = maybe (IrcNick "chatty") (\n -> (IrcNick (unpack n))) nick
+  let ircNick = (IrcNick . maybe "chatty" unpack) nick
 
   case (server, channel, message) of
     (Just server', Just channel', Just message') -> do
-      let ircServer = IrcServer { address=(unpack server'), port=(PortNumber (fromInteger portNumber)) }
-      let ircMessage = IrcMessage { channel=(IrcChannel (unpack channel')), content=(unpack message') }
+      let ircServer = IrcServer { address=unpack server', port=PortNumber (fromInteger portNumber) }
+      let ircMessage = IrcMessage { channel=IrcChannel (unpack channel'), content=unpack message' }
       liftIO $ sendToChannel ircServer ircNick ircMessage
       writeBS "ok"
     _ -> writeBS "Need a server, a port, a channel and a message."
