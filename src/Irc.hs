@@ -39,14 +39,14 @@ nickMessage (IrcNick nick) = "NICK " ++ nick ++ "\r\n"
 
 userMessage :: IrcConfig -> String
 userMessage c =
-  "USER " ++ (userName c) ++ " " ++ (hostName c) ++ " " ++ (serverName c) ++ " :" ++ (realName c) ++ "\r\n"
+  "USER " ++ userName c ++ " " ++ hostName c ++ " " ++ serverName c ++ " :" ++ realName c ++ "\r\n"
 
 joinMessage :: IrcChannel -> String
 joinMessage (IrcChannel chan) = "JOIN " ++ chan ++ "\r\n"
 
 privMessage :: IrcMessage -> String
 privMessage m =
-  "PRIVMSG " ++ channelName ++ " :" ++ (content m) ++ "\r\n"
+  "PRIVMSG " ++ channelName ++ " :" ++ content m ++ "\r\n"
   where
     IrcChannel channelName = channel m
 
