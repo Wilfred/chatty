@@ -50,6 +50,9 @@ privMessage m =
   where
     IrcChannel channelName = channel m
 
+quitMessage :: String
+quitMessage = "QUIT\r\n"
+
 ircConnect :: IrcServer -> IrcConfig -> IrcNick -> IO Handle
 ircConnect server config nick = do
   -- open a connection
@@ -64,6 +67,14 @@ ircConnect server config nick = do
   -- the server send a PING.
   
   return handle
+
+ircDisconnect :: Handle -> IO ()
+ircDisconnect handle = do
+  --tell the server we're quitting
+  writeToHandle handle quitMessage
+
+  --disconnect
+  hClose handle
 
 writeToHandle :: Handle -> String -> IO ()
 writeToHandle h s = do
@@ -86,5 +97,4 @@ sendToChannel server nick message = do
   --send the message
   writeToHandle h $ privMessage message
 
-  --disconnect
-  hClose h
+  ircDisconnect h
