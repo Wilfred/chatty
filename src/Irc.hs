@@ -68,7 +68,7 @@ ircConnect server config nick = do
 writeToHandle :: Handle -> String -> IO ()
 writeToHandle h s = do
   hPutStr h s
-  putStrLn $ "sent: " ++ s
+  putStr $ "sent: " ++ s
 
 -- top level function
 sendToChannel :: IrcServer -> IrcNick -> IrcMessage -> IO ()
