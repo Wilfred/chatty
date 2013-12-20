@@ -1,7 +1,7 @@
 module Irc where
 
 import Network(connectTo, PortID())
-import System.IO(hSetBuffering, BufferMode(NoBuffering), Handle, hPutStr, hClose, hGetLine)
+import System.IO(hSetBuffering, BufferMode(LineBuffering), Handle, hPutStr, hClose, hGetLine)
 
 -- todo: rename to server
 data IrcServer = IrcServer {
@@ -57,7 +57,7 @@ ircConnect :: IrcServer -> IrcConfig -> IrcNick -> IO Handle
 ircConnect server config nick = do
   -- open a connection
   handle <- connectTo (address server) (port server)
-  hSetBuffering handle NoBuffering
+  hSetBuffering handle LineBuffering
 
   -- send the necessary HELLO
   writeToHandle handle $ nickMessage nick
@@ -73,6 +73,9 @@ ircDisconnect handle = do
   --tell the server we're quitting
   writeToHandle handle quitMessage
 
+  -- read the server's response
+  hGetLine handle
+
   --disconnect
   hClose handle
 
@@ -87,14 +90,20 @@ sendToChannel server nick message = do
   -- open a connection to the server
   h <- ircConnect server defaultConfig nick
 
-  -- read some data to keep the server happy
+  -- read the server's response to keep it happy
   hGetLine h
 
   --join the channel
   --TODO: this shouldn't be necessary
   writeToHandle h $ joinMessage $ channel message
 
+  -- read the server's response
+  hGetLine h
+
   --send the message
   writeToHandle h $ privMessage message
+
+  -- read the server's response
+  hGetLine h
 
   ircDisconnect h
